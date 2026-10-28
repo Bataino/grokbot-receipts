@@ -7,7 +7,13 @@
   <meta name="description" content="$GROKBOT: a fan-made GrokBot coin created end to end by GrokBot on pump.fun, with the screen recording as proof.">
   <meta property="og:title" content="$GROKBOT receipts: created by GrokBot">
   <meta property="og:description" content="Created Sep 26, 2026 by GrokBot on pump.fun. Screen recording inside.">
-  <meta property="og:image" content="assets/poster.jpg">
+  <meta property="og:image" content="https://grokbotcoin.pages.dev/assets/share.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://grokbotcoin.pages.dev/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:image" content="https://grokbotcoin.pages.dev/assets/share.jpg">
+  <meta name="twitter:title" content="$GROKBOT: first coin launched by GrokBot, on camera">
   <meta name="twitter:card" content="summary_large_image">
   <title>$GROKBOT receipts · created by GrokBot</title>
   <link rel="icon" href="assets/avatar.png">
@@ -55,6 +61,12 @@
         <button class="copy-button" id="copy-button" type="button" aria-label="Copy contract address">Copy CA <span aria-hidden="true">⧉</span></button>
       </div>
       <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+      <div id="live-stats" style="display:flex;gap:28px;flex-wrap:wrap;margin-top:18px;font-family:inherit">
+        <div><div style="opacity:.6;font-size:.8rem;letter-spacing:.08em">LIVE MARKET CAP</div><div id="ls-mc" style="font-size:1.6rem;font-weight:700;color:#9dfa6b">…</div></div>
+        <div><div style="opacity:.6;font-size:.8rem;letter-spacing:.08em">24H VOLUME</div><div id="ls-vol" style="font-size:1.6rem;font-weight:700">…</div></div>
+        <div><div style="opacity:.6;font-size:.8rem;letter-spacing:.08em">24H BUYS / SELLS</div><div id="ls-tx" style="font-size:1.6rem;font-weight:700">…</div></div>
+        <div style="align-self:flex-end;opacity:.5;font-size:.75rem"><span id="ls-dot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#9dfa6b;margin-right:6px"></span>updates every 30s</div>
+      </div>
     </section>
 
 
@@ -127,5 +139,22 @@
       }, 2200);
     });
   </script>
+<script>
+(function(){
+  const M='4jHeserpyy33THfxx5asiMMvFXQcKUEm91BbZC2Tpump';
+  const f=n=>n>=1e6?'$'+(n/1e6).toFixed(2)+'M':n>=1e3?'$'+(n/1e3).toFixed(2)+'K':'$'+n.toFixed(2);
+  async function tick(){
+    try{
+      const r=await fetch('https://api.dexscreener.com/latest/dex/tokens/'+M,{cache:'no-store'});
+      const p=((await r.json()).pairs||[]).sort((a,b)=>(b.liquidity?.usd||0)-(a.liquidity?.usd||0))[0];
+      if(!p) return;
+      const mc=p.marketCap||p.fdv; if(mc) document.getElementById('ls-mc').textContent=f(mc);
+      document.getElementById('ls-vol').textContent=f(p.volume?.h24||0);
+      const t=p.txns?.h24||{}; document.getElementById('ls-tx').textContent=(t.buys||0)+' / '+(t.sells||0);
+    }catch(e){}
+  }
+  tick(); setInterval(tick,30000);
+})();
+</script>
 </body>
 </html>
