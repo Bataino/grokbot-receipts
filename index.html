@@ -63,8 +63,6 @@
       <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
       <div id="live-stats" style="display:flex;gap:28px;flex-wrap:wrap;margin-top:18px;font-family:inherit">
         <div><div style="opacity:.6;font-size:.8rem;letter-spacing:.08em">LIVE MARKET CAP</div><div id="ls-mc" style="font-size:1.6rem;font-weight:700;color:#9dfa6b">…</div></div>
-        <div><div style="opacity:.6;font-size:.8rem;letter-spacing:.08em">24H VOLUME</div><div id="ls-vol" style="font-size:1.6rem;font-weight:700">…</div></div>
-        <div><div style="opacity:.6;font-size:.8rem;letter-spacing:.08em">24H BUYS / SELLS</div><div id="ls-tx" style="font-size:1.6rem;font-weight:700">…</div></div>
         <div style="align-self:flex-end;opacity:.5;font-size:.75rem"><span id="ls-dot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#9dfa6b;margin-right:6px"></span>updates every 30s</div>
       </div>
     </section>
@@ -149,8 +147,6 @@
       const p=((await r.json()).pairs||[]).sort((a,b)=>(b.liquidity?.usd||0)-(a.liquidity?.usd||0))[0];
       if(!p) return;
       const mc=p.marketCap||p.fdv; if(mc) document.getElementById('ls-mc').textContent=f(mc);
-      document.getElementById('ls-vol').textContent=f(p.volume?.h24||0);
-      const t=p.txns?.h24||{}; document.getElementById('ls-tx').textContent=(t.buys||0)+' / '+(t.sells||0);
     }catch(e){}
   }
   tick(); setInterval(tick,30000);
